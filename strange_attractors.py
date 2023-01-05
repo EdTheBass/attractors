@@ -2,13 +2,20 @@ import pygame as game
 
 game.init()
 
-WIDTH = 800
-HEIGHT = 800
+WIDTH = 500
+HEIGHT = 500
 
-SCALE = 150
-OFFSET_X = 150
-OFFSET_Y = -100
+SCALES = [150, 150]
+OFFSETS_X = [150, 150]
+OFFSETS_Y = [-100, -100]
 
+coefficients1 = [[-1.2, -0.6, -0.5, 0.1, -0.7, 0.2], [-1.2, -0.6, -0.5, 0.1, -0.7, 0.2]]
+coefficients2 = [[-0.9, 0.9, 0.1, -0.3, -1, 0.3], [-1, 0.9, 0.1, -0.3, -1, 0.3]]
+
+C = 1
+
+OFFSET_X = OFFSETS_X[C]
+OFFSET_Y = OFFSETS_Y[C]
 
 def _map(val, r1, r2, nr1, nr2):
     return ((val - r1) / (r2 - r1) ) * (nr2 - nr1) + nr1
@@ -21,12 +28,12 @@ def num2rgb(num):
 
 def fx(xy):
     x,y = xy
-    a,b,c,d,e,f = -1.2, -0.6, -0.5, 0.1, -0.7, 0.2
+    a,b,c,d,e,f = coefficients1[C]
     return a + b*x + c*x**2 + d*x*y + e*y + f*y**2
 
 def fy(xy):
     x,y = xy
-    a,b,c,d,e,f = -0.9, 0.9, 0.1, -0.3, -1, 0.3
+    a,b,c,d,e,f = coefficients2[C]
     return a + b*x + c*x**2 + d*x*y + e*y + f*y**2
 
 def centre(xy):
@@ -48,7 +55,7 @@ def generate_points(start):
 
 def scale(point):
     x,y = point
-    return [x*SCALE, y*SCALE]
+    return [x*SCALES[C], y*SCALES[C]]
 
 def get_colour(i):
     num = int(_map(i, 0, iterations, 0, 16777215))
@@ -57,7 +64,7 @@ def get_colour(i):
 
 def draw_points():
     for i, p in enumerate(points):
-        game.draw.line(window, get_colour(i), p, p, 7)
+        game.draw.line(window, get_colour(i), p, p, 1)
         
 iterations = 100000
 
